@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Shrinksafe Ant Task Tests" basedir=".">
+
+    <target name="init">
+        <taskdef name="shrinksafe" classname="com.zutubi.ant.shrinksafe.ShrinksafeTask"/>
+
+        <property name="src.dir" value="resources"/>
+        
+    </target>
+
+    <target name="shrinksafe" depends="init">
+        <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}">
+            <include name="**/*.js"/>
+        </shrinksafe>
+    </target>
+
+    <target name="testForce" depends="init">
+        <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}" force="${force}">
+            <include name="sample.js"/>
+        </shrinksafe>
+    </target>
+
+    <target name="testSourceDirRequired" depends="init">
+        <shrinksafe outputDir="${out.dir}">
+            <include name="sample.js"/>
+        </shrinksafe>
+    </target>
+
+    <target name="testOutputDirRequired" depends="init">
+        <shrinksafe sourceDir="${src.dir}">
+            <include name="sample.js"/>
+        </shrinksafe>
+    </target>
+
+    <target name="testSuffix" depends="init">
+        <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}" suffix="blah">
+            <include name="sample.js"/>
+        </shrinksafe>
+    </target>
+
+    <target name="testEmptyFileset" depends="init">
+        <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}">
+            <exclude name="**/*.js"/>
+        </shrinksafe>
+    </target>
+    
+</project>

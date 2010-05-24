@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Shrinksafe Ant Task" basedir="." default="test">
+
+    <target name="usage" depends="init">
+        <echo>This build file defines the following targets:</echo>
+        <echo>....</echo>
+    </target>
+
+    <!-- initialise configuration -->
+    <target name="init">
+
+        <property name="build.dir" value="build"/>
+        <property name="classes.dir" value="${build.dir}/classes"/>
+        <property name="test.classes.dir" value="${build.dir}/testclasses"/>
+        <property name="junit.out.xml.dir" value="${build.dir}/junit/report/xml"/>
+
+        <property name="lib.dir" value="lib"/>
+
+        <property name="src.dir" value="src/java"/>
+        <property name="test.dir" value="src/test"/>
+
+        <!-- library paths. -->
+        <path id="lib.path">
+            <fileset dir="${lib.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+
+        <path id="test.path">
+            <pathelement location="${classes.dir}"/>
+            <path refid="lib.path"/>
+        </path>
+
+    </target>
+
+    <!-- clean dependencies -->
+    <target name="clean" depends="init">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!-- prepare for new build -->
+    <target name="prepare" depends="init">
+
+        <!-- create necessary directories -->
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${test.classes.dir}"/>
+
+    </target>
+
+    <!-- execute the common portion of the build. -->
+    <target name="build" depends="prepare">
+
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" debug="true">
+            <classpath refid="lib.path"/>
+        </javac>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+
+        <javac srcdir="${test.dir}" destdir="${test.classes.dir}" includeantruntime="false" debug="true">
+            <classpath refid="test.path"/>
+        </javac>
+        
+        <copy todir="${test.classes.dir}">
+            <fileset dir="${test.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+
+    </target>
+
+    <target name="jar" depends="build">
+        <jar file="${build.dir}/shrinksafe-task.jar" basedir="${classes.dir}"/>
+    </target>
+
+    <target name="test" description="Runs the unit tests" depends="jar">
+
+        <delete dir="${junit.out.xml.dir}"/>
+        <mkdir dir="${junit.out.xml.dir}"/>
+
+        <junit printsummary="yes" haltonfailure="no">
+            <classpath>
+                <path refid="test.path"/>
+                <pathelement location="${test.classes.dir}"/>
+            </classpath>
+            <formatter type="xml"/>
+            <batchtest fork="yes" todir="${junit.out.xml.dir}">
+                <fileset dir="${test.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+
+    </target>
+
+</project>
