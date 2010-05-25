@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Shrinksafe Ant Task" basedir="." default="test">
+<project name="Shrinksafe Ant Task" basedir="." default="jar">
 
     <target name="usage" depends="init">
         <echo>This build file defines the following targets:</echo>

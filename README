@@ -1,0 +1,64 @@
+The ShrinkSafe Ant Task is a simple ant task wrapper around ShrinkSafe.
+
+
+Building from source:
+---------------------
+
+To build the shrinksafe-ant-task, run ant from the root directory.
+
+
+
+Installing:
+-----------
+
+To use the shrinksafe task as part of your ant build, you will need
+the following jars
+
+build/shrinksafe-ant-task.jar
+lib/js.jar
+lib/shrinksafe-1.4.3.jar
+
+Copy these jars to somewhere that is accessible from your build, for
+example, the project.root/etc/shrinksafe directory.
+
+Define the custom task as follows
+
+    <path id="shrinksafe.path">
+        <pathelement location="etc/shrinksafe/shrinksafe-ant-task.jar"/>
+        <pathelement location="etc/shrinksafe/shrinksafe-1.4.3.jar"/>
+        <pathelement location="etc/shrinksafe/js.jar"/>
+    </path>
+
+    <taskdef name="shrinksafe" classname="com.zutubi.ant.shrinksafe.ShrinksafeTask">
+        <classpath>
+            <path refid="shrinksafe.path"/>
+        </classpath>
+    </taskdef>
+
+
+
+Usage:
+------
+
+To process all .js files in the ${src.dir}, placing the processed files in the ${out.dir}
+directory
+
+    <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}">
+        <include name="**/*.js"/>
+    </shrinksafe>
+
+By default, the plugin will not overwrite any existing files in the ${out.dir}.  You can
+change this by setting force to true:
+
+    <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}" force="true">
+        <include name="sample.js"/>
+    </shrinksafe>
+
+If you want to add a suffix to all of the processed files, you can do so with the suffix
+attribute.  In the following example, all files written to the ${out.dir} have the -1.0
+suffix added prior to the files extension.
+
+    <shrinksafe outputDir="${out.dir}" sourceDir="${src.dir}" suffix="1.0">
+        <include name="sample.js"/>
+    </shrinksafe>
+
